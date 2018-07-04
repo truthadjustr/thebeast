@@ -62,6 +62,8 @@ void test_chrono()
 extern int n;
 extern std::string s;
 
+// test comment
+
 int main()
 {
     f1();
