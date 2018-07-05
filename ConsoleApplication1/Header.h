@@ -1,3 +1,3 @@
 #pragma once
 
-#define DX "dexter"
+int addnum(int a, int b);

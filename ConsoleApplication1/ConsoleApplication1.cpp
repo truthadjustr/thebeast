@@ -1,5 +1,3 @@
-
-
 // ConsoleApplication1.cpp : Defines the entry point for the console application.
 //
 
@@ -8,6 +6,9 @@
 #include <iostream>
 #include <string>
 #include <functional>
+#include <Windows.h>
+
+#include "Header.h"
 
 class Mystring {
 private:
@@ -59,9 +60,11 @@ std::function<void(void)> testing_closure(int a,int b)
 
 int main()
 {
+    int sum = addnum(2, 5);
+
     auto f1 = testing_closure(1,2);
     auto f2 = testing_closure(3,4);
-
+    Sleep(20000);
     f1();
     f2();
 
