@@ -22,7 +22,8 @@ public:
     // pop an element and return a copy. Block if queue empty.
     //T pop();
     //  push an element to the back of the queue.
-    void push(const T& item) {
+    void push(const T& item) 
+    {
         std::unique_lock<std::mutex> lck(mtx);
         //if (item != nullptr) {
             q.push(item);
@@ -30,7 +31,8 @@ public:
         //}
     }
 
-    T next() {
+    T next() 
+    {
         T elem;// = nullptr;
         std::unique_lock<std::mutex> lck(mtx);
         cv.wait(lck, [this] {return !q.empty(); });
@@ -88,7 +90,8 @@ int main()
     int item;
     //std::string item;
 
-    while (true) {
+    while (true) 
+    {
         std::getline(std::cin, input);
         item = atoi(input.c_str());
         //item = input;
