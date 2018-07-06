@@ -33,7 +33,6 @@ public:
     T next() {
         T elem;// = nullptr;
         std::unique_lock<std::mutex> lck(mtx);
-        //cv.wait(lck, [] {return true; });
         cv.wait(lck, [this] {return !q.empty(); });
         if (!q.empty()) {
             elem = q.front();
@@ -43,23 +42,20 @@ public:
     }
 };
 
-Queue<std::string> ourQueue;
+//Queue<std::string> ourQueue;
+Queue<int> ourQueue;
 
+template <typename T>
 int threadfunc(int a,int b)
-//int threadfunc()
 {
-    std::string item;
+    //std::string item;
+    T item;
     char buf[100];
 
     while (1)
     {
         item = ourQueue.next();
-        //std::string iTemp = ourQueue.pop();
-        //std::cout << iTemp.c_str() << std::endl;
-        //ourQueue.pop();
-        snprintf(buf, sizeof(buf), "[%s]\n", item.c_str());
-        //snprintf(buf, sizeof(buf), "[%s]\n", "this is a test");
-        std::cout << buf;
+        std::cout << "[" << item << "]" << std::endl;
     }
 
     return 0;
@@ -67,14 +63,14 @@ int threadfunc(int a,int b)
 
 int main()
 {
-    std::string s0;
     //std::string s = "apple";
     //std::cout << s.c_str();
     int i = 0;
-    //HANDLE  hThreadArray[MAX_THREADS];
-    //DWORD dwThreadId;
 
 #if 0
+    HANDLE  hThreadArray[MAX_THREADS];
+    DWORD dwThreadId;
+
     hThreadArray[i] = CreateThread(
         NULL,                   // default security attributes
         0,                      // use default stack size  
@@ -84,17 +80,19 @@ int main()
         &dwThreadId);   // returns the thread identifier 
 #endif
 
-    std::thread t(threadfunc,3,4);
+    //std::thread t(threadfunc<std::string>,2,4);
+    std::thread t(threadfunc<int>,2,4);
 
     char ch[100];
     std::string input;
+    int item;
+    //std::string item;
 
     while (true) {
-        //std::cin >> ch;        
         std::getline(std::cin, input);
-        //std::cout << "[" << ch << "]\n";
-        //ourQueue.push(std::string(ch));
-        ourQueue.push(input);
+        item = atoi(input.c_str());
+        //item = input;
+        ourQueue.push(item);
     }
 
     t.join();
