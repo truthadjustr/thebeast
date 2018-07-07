@@ -9,7 +9,10 @@ procon: procon.cpp
 ub: ub.cpp
 	g++ -std=c++17 -O2 -Wall -Wextra -pedantic -fsanitize=address -o ub ub.cpp
 
+ambi: ambi.cpp
+	g++ -o ambi ambi.cpp
+
 clean:
-	@rm -f *.o test1 procon ub
+	@rm -f *.o test1 procon ub ambi
 
 .PHONY: clean
