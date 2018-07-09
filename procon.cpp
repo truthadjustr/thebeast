@@ -12,6 +12,8 @@
 #include <mutex>
 #include <condition_variable>
 
+#include <unistd.h>
+
 template <typename T>
 class Queue
 {
@@ -44,8 +46,8 @@ public:
     }
 };
 
-//Queue<std::string> ourQueue;
-Queue<int> ourQueue;
+Queue<std::string> ourQueue;
+//Queue<int> ourQueue;
 
 template <typename T>
 int threadfunc(int a,int b)
@@ -83,13 +85,14 @@ int main()
 #endif
 
     //std::thread t(threadfunc<std::string>,2,4);
-    std::thread t(threadfunc<int>,2,4);
+    //std::thread t(threadfunc<int>,2,4);
 
     char ch[100];
     std::string input;
-    int item;
-    //std::string item;
+    //int item;
+    std::string item;
 
+#if 0
     while (true) 
     {
         std::getline(std::cin, input);
@@ -97,8 +100,22 @@ int main()
         //item = input;
         ourQueue.push(item);
     }
+#endif
+
+/*
+    for (int i = 0;i < 10; i++) {
+        std::string s = "counting " + std::to_string(i);
+        ourQueue.push(s);
+        sleep(1);
+    }
 
     t.join();
+*/
+    for (int j = 0; j < 5; j++) {
+        std::string item = ourQueue.next();
+        std::cout << item;
+        sleep(1);
+    }
 
     return 0;
 }
