@@ -20,38 +20,58 @@ struct Person {
 int pred = 0;
 std::mutex m;
 std::condition_variable cv;
+std::atomic<bool> flag = true;
 
 void f(void *data)
 {
-    std::this_thread::sleep_for(std::chrono::seconds(25));
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    int counter = 0;
 
-    while (true) {
+    while (flag) {
         std::lock_guard<std::mutex> lk(m);
+        //std::unique_lock<std::mutex> lk(m);
         pred++;
+        std::cout << pred << ","; 
+        //std::this_thread::sleep_for(std::chrono::seconds(1));
         cv.notify_one();
+        counter++;
+        //if (counter == 1000) break;
     }
+    std::cout << "Bye\n";
 }
 
 int main()
 {
     std::atomic<double> p;
     std::atomic<Person> p2;
+    int counter = 0;
     std::thread t(f,nullptr);
+
+    std::thread([](void *data) mutable -> int {
+        for (int i = 0;i < 10; i++) {
+            std::cout << "i = " << i << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+        return 0;
+    },nullptr).join();
 
     while (true) {
         std::unique_lock<std::mutex> lk(m);
         cv.wait(lk, [] { 
             if (pred > 0) {
-                std::cout << "something todo\n";
+                std::cout << "+\n";
+                pred = 0;
                 return true;
             } else {
-                std::cout << "nope\n";
+                std::cout << "-\n";
                 return false;
             }
         });
-        pred = 0;
+        //pred = 0;
+        if (counter == 5) break;
+        counter++;
     }
-
+    flag = false;
     t.join();
     return 0;
 }
