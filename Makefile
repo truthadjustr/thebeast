@@ -23,7 +23,10 @@ endif
 cppthreads: cppthreads.cpp
 	g++ -std=c++17 -o cppthreads cppthreads.cpp
 
+ambi: ambi.cpp
+	g++ -o ambi ambi.cpp
+
 clean:
-	@rm -f *.o test1 procon ub controller cppthreads
+	@rm -f *.o test1 procon ub ambi controller cppthreads
 
 .PHONY: clean
