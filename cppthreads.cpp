@@ -4,6 +4,8 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <functional>
+#include <future>
 
 struct Contact {
     char mobile[30];
@@ -40,8 +42,45 @@ void f(void *data)
     std::cout << "Bye\n";
 }
 
+std::function<void()> f()
+{
+    return []{
+        for (int i = 0;i < 5; i++) {
+            std::cout << "i is " << i << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+    };
+}
+
+int fn()
+{
+    for (int i = 0;i < 3; i++) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::cout << "*" << std::flush;
+    }
+    return 42;
+}
+
 int main()
 {
+    std::future<int> the_answer = std::async(fn);
+    for (int i = 0;i < 5; i++) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::cout << "." << std::flush;
+    }
+    std::cout << the_answer.get() << std::endl;
+#if 0
+    std::cout << std::thread::hardware_concurrency();
+    std::thread t{f()};
+    // std::thread t(f()); // also works
+
+    //t.join();
+    t.detach();
+
+    std::this_thread::sleep_for(std::chrono::seconds(10));
+#endif
+
+#if 0
     std::atomic<double> p;
     std::atomic<Person> p2;
     int counter = 0;
@@ -74,4 +113,5 @@ int main()
     flag = false;
     t.join();
     return 0;
+#endif
 }
